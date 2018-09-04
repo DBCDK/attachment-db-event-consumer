@@ -7,9 +7,9 @@ CREATE TABLE event (
     consumerId              TEXT NOT NULL REFERENCES consumer(id),
     bibliographicRecordId   TEXT NOT NULL,
     agencyId                INTEGER NOT NULL,
-    isActive                BOOLEAN NOT NULL,
-    CONSTRAINT unique_event UNIQUE(consumerId, bibliographicRecordId, agencyId, isActive)
+    isActive                BOOLEAN NOT NULL
 );
+CREATE INDEX event_idx ON event(bibliographicRecordId, agencyId, isActive, consumerId);
 
 -- This table should already exists in production environments.
 -- Only create in "from-scratch" test scenarios.
