@@ -130,3 +130,46 @@ CREATE TRIGGER attachment_insert_trigger
   AFTER INSERT ON attachment
   FOR EACH ROW
   EXECUTE PROCEDURE on_attachment_insert();
+
+
+CREATE OR REPLACE FUNCTION on_attachment_delete()
+  RETURNS TRIGGER AS $$
+DECLARE
+  consumer   TEXT;
+  event_type TEXT;
+  remaining  INTEGER;
+BEGIN
+
+  BEGIN
+    SELECT * FROM get_event_type(OLD.attachment_type)
+    INTO event_type;
+  END;
+
+  -- currently we are only interested in forside (cover) events
+  IF event_type = 'forside' THEN
+    BEGIN
+      SELECT COUNT(*) FROM attachment WHERE lokalid = OLD.lokalid
+        AND bibliotek = OLD.bibliotek
+        AND attachment_type LIKE event_type || '_%'
+      INTO remaining;
+    END;
+
+    -- Only create delete event if no more attachments with
+    -- matching event type exist
+    IF remaining = 0 THEN
+      FOR consumer IN
+        SELECT id FROM consumer
+      LOOP
+        PERFORM * FROM add_event(OLD.lokalid, CAST(OLD.bibliotek AS INTEGER), false, consumer);
+      END LOOP;
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER attachment_delete_trigger
+  AFTER DELETE ON attachment
+  FOR EACH ROW
+  EXECUTE PROCEDURE on_attachment_delete();
