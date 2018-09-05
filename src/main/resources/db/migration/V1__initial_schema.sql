@@ -9,7 +9,7 @@ CREATE TABLE event (
     agencyId                INTEGER NOT NULL,
     isActive                BOOLEAN NOT NULL
 );
-CREATE INDEX event_idx ON event(bibliographicRecordId, agencyId, isActive, consumerId);
+CREATE INDEX event_idx ON event(bibliographicRecordId, agencyId, consumerId);
 
 -- This table should already exists in production environments.
 -- Only create in "from-scratch" test scenarios.
