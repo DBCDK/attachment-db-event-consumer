@@ -10,6 +10,7 @@ CREATE TABLE event (
     isActive                BOOLEAN NOT NULL
 );
 CREATE INDEX event_idx ON event(bibliographicRecordId, agencyId, consumerId);
+CREATE INDEX consumer_idx ON event(consumerId);
 
 -- This table should already exists in production environments.
 -- Only create in "from-scratch" test scenarios.
@@ -60,6 +61,31 @@ BEGIN
   END CASE;
 
   RETURN;
+END
+$$
+LANGUAGE plpgsql;
+
+
+-- removes head of event queue for given consumer
+CREATE OR REPLACE FUNCTION remove_event(consumerId_ TEXT)
+  RETURNS SETOF event AS $$
+DECLARE
+  row event;
+BEGIN
+
+  FOR row IN
+    SELECT * FROM event
+    WHERE consumerId = consumerId_
+    ORDER BY id ASC LIMIT 1
+    FOR UPDATE SKIP LOCKED
+  LOOP
+    BEGIN
+      DELETE FROM event
+      WHERE id = row.id;
+      RETURN NEXT row;
+    END;
+  END LOOP;
+
 END
 $$
 LANGUAGE plpgsql;
