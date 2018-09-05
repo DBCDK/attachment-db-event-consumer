@@ -22,3 +22,44 @@ CREATE TABLE IF NOT EXISTS attachment (
     data              BYTEA,
     source_id         INTEGER
 );
+
+CREATE OR REPLACE FUNCTION add_event(
+  bibliographicRecordId_ TEXT,
+  agencyId_              INTEGER,
+  isActive_              BOOLEAN,
+  consumerId_            TEXT)
+  RETURNS void AS $$
+DECLARE
+  lastEvent event;
+BEGIN
+
+  BEGIN
+    SELECT *
+    INTO lastEvent
+    FROM event
+    WHERE bibliographicRecordId = bibliographicRecordId_ AND agencyId = agencyId_ AND consumerId = consumerId_
+    ORDER BY id DESC LIMIT 1;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        lastEvent := NULL;
+  END;
+
+  CASE
+    WHEN lastEvent IS NULL
+    THEN
+      -- No existing event matches (bibliographicRecordId, agencyId, consumerId)
+      INSERT INTO event(bibliographicRecordId, agencyId, consumerId, isActive)
+      VALUES (bibliographicRecordId_, agencyId_, consumerId_, isActive_);
+    ELSE
+      IF lastEvent.isActive != isActive_ THEN
+        -- Only insert if new event causes a state change
+        -- when compared to the last event
+        INSERT INTO event(bibliographicRecordId, agencyId, consumerId, isActive)
+        VALUES (bibliographicRecordId_, agencyId_, consumerId_, isActive_);
+      END IF;
+  END CASE;
+
+  RETURN;
+END
+$$
+LANGUAGE plpgsql;
