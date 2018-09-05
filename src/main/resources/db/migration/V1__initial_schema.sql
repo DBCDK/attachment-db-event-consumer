@@ -89,3 +89,44 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql;
+
+-- Splits given attachment type into its event type
+-- eg. 'forside_500' -> 'forside'
+CREATE OR REPLACE FUNCTION get_event_type(attachmentType TEXT)
+  RETURNS TEXT AS $$
+BEGIN
+  RETURN split_part(attachmentType, '_', 1);
+END
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION on_attachment_insert()
+  RETURNS TRIGGER AS $$
+DECLARE
+  consumer   TEXT;
+  event_type TEXT;
+BEGIN
+
+  BEGIN
+    SELECT * FROM get_event_type(NEW.attachment_type)
+    INTO event_type;
+  END;
+
+  -- currently we are only interested in forside (cover) events
+  IF event_type = 'forside' THEN
+    FOR consumer IN
+      SELECT id FROM consumer
+    LOOP
+      PERFORM * FROM add_event(NEW.lokalid, CAST(NEW.bibliotek AS INTEGER), true, consumer);
+    END LOOP;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER attachment_insert_trigger
+  AFTER INSERT ON attachment
+  FOR EACH ROW
+  EXECUTE PROCEDURE on_attachment_insert();
