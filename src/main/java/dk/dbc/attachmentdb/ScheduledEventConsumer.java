@@ -1,7 +1,13 @@
+/*
+ * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU GPLv3
+ * See license text in LICENSE.txt
+ */
+
 package dk.dbc.attachmentdb;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
