@@ -29,6 +29,7 @@
   <properties>
     <jdk.target.version>1.8</jdk.target.version>
     <slf4j.version>1.7.25</slf4j.version>
+    <httpclient.version>0.1.0</httpclient.version>
   </properties>
 
   <dependencies>
@@ -73,6 +74,16 @@
       <artifactId>postgresql</artifactId>
       <version>42.2.5</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.jodah</groupId>
+      <artifactId>failsafe</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>dk.dbc</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${httpclient.version}</version>
     </dependency>
   </dependencies>
 
