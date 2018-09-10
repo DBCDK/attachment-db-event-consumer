@@ -5,19 +5,21 @@
 
 package dk.dbc.attachmentdb;
 
+import dk.dbc.httpclient.FailSafeHttpClient;
+import dk.dbc.httpclient.HttpPost;
+import dk.dbc.httpclient.PathBuilder;
+import dk.dbc.invariant.InvariantUtil;
+import dk.dbc.util.Stopwatch;
+import net.jodah.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-
-import net.jodah.failsafe.RetryPolicy;
-
-import dk.dbc.httpclient.FailSafeHttpClient;
-import dk.dbc.invariant.InvariantUtil;
 
 /**
  * SolrDocstoreConnector - SolrDocstore service client
@@ -38,6 +40,8 @@ import dk.dbc.invariant.InvariantUtil;
 public class SolrDocstoreConnector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SolrDocstoreConnector.class);
+
+    private static final String PATH_DISPATCH_EVENT = "/api/v1/events"; // ToDo: rename/redefine when endpoint name is known
 
     private static final RetryPolicy RETRY_POLICY = new RetryPolicy()
             .retryOn(Collections.singletonList(ProcessingException.class))
@@ -75,5 +79,55 @@ public class SolrDocstoreConnector {
         failSafeHttpClient.getClient().close();
     }
 
-    // Todo: Add endpoint stubs
+    /**
+     * @param event Event
+     * @return true if the event was accepted by the Solrdocstore service
+     * @throws SolrDocstoreConnectorException on failure to communicate with the Solrdocstore service
+     * @throws SolrDocstoreConnectoreUnexpectedStatusCodeException on unexpected response status code
+     *
+     * TODO: Rename and adjust implementation when we receive specs from Search
+     */
+    public void dispatchEvent(AttachmentDbEvent event)
+            throws SolrDocstoreConnectorException {
+
+        final Stopwatch stopwatch = new Stopwatch();
+        try {
+            if( event == null ) {
+                throw new SolrDocstoreConnectorException ("event is null");
+            }
+
+            final PathBuilder path = new PathBuilder(PATH_DISPATCH_EVENT);
+
+            final HttpPost svc = new HttpPost(failSafeHttpClient)
+                    .withBaseUrl(baseUrl)
+                    .withPathElements(path.build())
+                    .withData (event, MediaType.APPLICATION_JSON);
+
+            final Response response = svc.execute();
+            assertResponseStatus(response, Response.Status.OK); // ToDo: May return CREATED instead ?, check with spec.
+        } finally {
+            LOGGER.info("dispatchEvent(agency:{}, record-id:{}) took {} milliseconds",
+                    event.getAgencyId (), event.getBibliographicRecordId (),
+                    stopwatch.getElapsedTime(TimeUnit.MILLISECONDS));
+        }
+    }
+
+    /**
+     * Verifies that we received the expected status code from the service
+     * @param response Service response
+     * @param expectedStatus The expected status
+     */
+    private void assertResponseStatus(Response response, Response.Status expectedStatus)
+            throws SolrDocstoreConnectoreUnexpectedStatusCodeException {
+
+        final Response.Status actualStatus =
+                Response.Status.fromStatusCode(response.getStatus());
+
+        if (actualStatus != expectedStatus) {
+            throw new SolrDocstoreConnectoreUnexpectedStatusCodeException(
+                    String.format("Solrdocstore service returned with unexpected status code: %s",
+                            actualStatus),
+                    actualStatus.getStatusCode());
+        }
+    }
 }
