@@ -5,6 +5,9 @@
 
 package dk.dbc.attachmentdb;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -23,32 +26,42 @@ public class AttachmentDbEvent {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     private long id;
 
+    @JsonIgnore
     public long getId() {
         return id;
     }
 
+    @JsonProperty("consumerId")
     private String consumerId;
 
+    @JsonIgnore
     public String getConsumerId() {
         return consumerId;
     }
 
+    @JsonProperty("bibliographicRecordId")
     private String bibliographicRecordId;
 
+    @JsonIgnore
     public String getBibliographicRecordId() {
         return bibliographicRecordId;
     }
 
+    @JsonProperty("agencyId")
     private int agencyId;
 
+    @JsonIgnore
     public int getAgencyId() {
         return agencyId;
     }
 
+    @JsonProperty("isActive")
     private boolean isActive;
 
+    @JsonIgnore
     public boolean getIsActive() {
         return isActive;
     }
