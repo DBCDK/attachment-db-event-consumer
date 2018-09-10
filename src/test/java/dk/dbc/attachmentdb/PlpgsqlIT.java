@@ -65,14 +65,14 @@ public class PlpgsqlIT extends IntegrationTest {
                     "VALUES ('rec1', '870970', 'forside_500')");    // add
             assertThat("number of events",
                     JDBCUtil.getFirstInt(conn, "SELECT COUNT(*) FROM event"), is(2));
-            assertEvent(1, "rec1", 870970, true, "consumer_a",
-                    JDBCUtil.queryForRowMaps(conn, "SELECT * FROM remove_event('consumer_a')").get(0));
-            assertEvent(2, "rec1", 870970, true, "consumer_b",
-                    JDBCUtil.queryForRowMaps(conn, "SELECT * FROM remove_event('consumer_b')").get(0));
             statement.executeUpdate("INSERT INTO attachment(lokalid,bibliotek,attachment_type) " +
                     "VALUES ('rec1', '870970', 'forside_10')");    // no new events added
             assertThat("number of events",
                     JDBCUtil.getFirstInt(conn, "SELECT COUNT(*) FROM event"), is(2));
+            assertEvent(1, "rec1", 870970, true, "consumer_a",
+                    JDBCUtil.queryForRowMaps(conn, "SELECT * FROM remove_event('consumer_a')").get(0));
+            assertEvent(2, "rec1", 870970, true, "consumer_b",
+                    JDBCUtil.queryForRowMaps(conn, "SELECT * FROM remove_event('consumer_b')").get(0));
         }
     }
 
