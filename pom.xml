@@ -31,6 +31,8 @@
     <slf4j.version>1.7.25</slf4j.version>
     <httpclient.version>0.1.0</httpclient.version>
     <stopwatch.version>1.0-SNAPSHOT</stopwatch.version>
+    <jersey.version>2.22.2</jersey.version>
+    <microprofile.version>1.2</microprofile.version>
   </properties>
 
   <dependencies>
@@ -90,6 +92,24 @@
       <groupId>dk.dbc</groupId>
       <artifactId>stopwatch</artifactId>
       <version>${stopwatch.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>${jersey.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>${jersey.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.config</groupId>
+      <artifactId>microprofile-config-api</artifactId>
+      <version>${microprofile.version}</version> <!-- version 1.2 available since Payara v4.1.2.181 -->
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
