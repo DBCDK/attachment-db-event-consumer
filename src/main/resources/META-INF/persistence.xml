@@ -8,7 +8,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
     <persistence-unit name="attachmentdb_PU" transaction-type="JTA">
-        <jta-data-source>jdbc/attachment-db-event-consumer/attachmentdb</jta-data-source>
+        <jta-data-source>jdbc/attachment-db</jta-data-source>
         <class>dk.dbc.attachmentdb.AttachmentDbEvent</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="none"/>
