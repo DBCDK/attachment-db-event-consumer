@@ -27,7 +27,7 @@ pipeline {
 		stage("verify") {
 			steps {
 				sh "mvn verify pmd:pmd javadoc:aggregate"
-				junit "target/surefire-reports/TEST-*.xml"
+				junit "target/**/TEST-*.xml"
 			}
 		}
 		stage("warnings") {
@@ -48,6 +48,16 @@ pipeline {
 					  pattern: '**/target/pmd.xml',
 					  unstableTotalAll: "1",
 					  failedTotalAll: "1"])
+			}
+		}
+		stage("docker build") {
+			steps {
+				script {
+					def image = docker.build("docker-io.dbc.dk/attachment-db-event-consumer:${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+					if (env.BRANCH_NAME == 'master') {
+						image.push()
+					}
+				}
 			}
 		}
 	}
