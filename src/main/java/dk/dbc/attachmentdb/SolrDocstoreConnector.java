@@ -96,11 +96,9 @@ public class SolrDocstoreConnector {
                 throw new SolrDocstoreConnectorException ("event is null");
             }
 
-            final PathBuilder path = new PathBuilder(PATH_DISPATCH_EVENT);
-
             final HttpPost svc = new HttpPost(failSafeHttpClient)
                     .withBaseUrl(baseUrl)
-                    .withPathElements(path.build())
+                    .withPathElements(PATH_DISPATCH_EVENT)
                     .withData (event, MediaType.APPLICATION_JSON);
 
             final Response response = svc.execute();
