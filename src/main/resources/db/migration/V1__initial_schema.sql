@@ -165,7 +165,7 @@ BEGIN
     END IF;
   END IF;
 
-  RETURN NEW;
+  RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
