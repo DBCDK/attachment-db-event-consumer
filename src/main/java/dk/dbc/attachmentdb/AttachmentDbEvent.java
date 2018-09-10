@@ -26,7 +26,6 @@ public class AttachmentDbEvent {
 
     @Id
     @GeneratedValue
-    @JsonIgnore
     private long id;
 
     @JsonIgnore
@@ -34,34 +33,26 @@ public class AttachmentDbEvent {
         return id;
     }
 
-    @JsonProperty("consumerId")
     private String consumerId;
 
-    @JsonIgnore
     public String getConsumerId() {
         return consumerId;
     }
 
-    @JsonProperty("bibliographicRecordId")
     private String bibliographicRecordId;
 
-    @JsonIgnore
     public String getBibliographicRecordId() {
         return bibliographicRecordId;
     }
 
-    @JsonProperty("agencyId")
     private int agencyId;
 
-    @JsonIgnore
     public int getAgencyId() {
         return agencyId;
     }
 
-    @JsonProperty("isActive")
     private boolean isActive;
 
-    @JsonIgnore
     public boolean getIsActive() {
         return isActive;
     }
