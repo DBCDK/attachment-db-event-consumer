@@ -7,7 +7,6 @@ package dk.dbc.attachmentdb;
 
 import dk.dbc.httpclient.FailSafeHttpClient;
 import dk.dbc.httpclient.HttpPost;
-import dk.dbc.httpclient.PathBuilder;
 import dk.dbc.invariant.InvariantUtil;
 import dk.dbc.util.Stopwatch;
 import net.jodah.failsafe.RetryPolicy;
