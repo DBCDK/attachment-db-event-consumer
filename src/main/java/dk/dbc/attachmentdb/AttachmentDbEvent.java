@@ -65,4 +65,10 @@ public class AttachmentDbEvent {
     public boolean getIsActive() {
         return isActive;
     }
+
+    @Override
+    public String toString () {
+        return "id:{}, consumerId:{}, bibliographicRecordId:{}, agency:{}, isActive:{}"
+                .format(String.valueOf(id), consumerId, bibliographicRecordId, agencyId, String.valueOf(isActive));
+    }
 }
