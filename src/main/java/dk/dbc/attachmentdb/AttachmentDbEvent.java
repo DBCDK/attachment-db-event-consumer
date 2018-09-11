@@ -6,7 +6,6 @@
 package dk.dbc.attachmentdb;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
@@ -23,6 +22,16 @@ public class AttachmentDbEvent {
             " FROM AttachmentDbEvent event";
     public static final String REMOVE_EVENT_QUERY_NAME =
             "AttachmentDbEvent.removeEvent";
+
+    public AttachmentDbEvent() { }
+
+    AttachmentDbEvent(String consumerId, String bibliographicRecordId, int agencyId, boolean isActive) {
+        this.id = -1;
+        this.consumerId = consumerId;
+        this.bibliographicRecordId = bibliographicRecordId;
+        this.agencyId = agencyId;
+        this.isActive = isActive;
+    }
 
     @Id
     @GeneratedValue
