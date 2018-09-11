@@ -95,12 +95,12 @@ public class SolrDocstoreConnector {
                 throw new SolrDocstoreConnectorException ("event is null");
             }
 
-            final HttpPost svc = new HttpPost(failSafeHttpClient)
+            final HttpPost solrDocstorePostRequest = new HttpPost(failSafeHttpClient)
                     .withBaseUrl(baseUrl)
                     .withPathElements(PATH_DISPATCH_EVENT)
                     .withData (event, MediaType.APPLICATION_JSON);
 
-            final Response response = svc.execute();
+            final Response response = solrDocstorePostRequest.execute();
             assertResponseStatus(response, Response.Status.OK); // ToDo: May return CREATED instead ?, check with spec.
         } finally {
             LOGGER.info("dispatchEvent(agency:{}, record-id:{}) took {} milliseconds",
