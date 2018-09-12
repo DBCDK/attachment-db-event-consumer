@@ -5,6 +5,9 @@
 
 package dk.dbc.attachmentdb;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException(rollback = true)
 public class AttachmentDbEventAcceptException extends Exception {
 
     /**

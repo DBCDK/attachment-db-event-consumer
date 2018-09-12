@@ -27,8 +27,6 @@ public class EventConsumer {
     /**
      * Consume next event from the attachment events queue.
      * On error, the event queue is rolled back.
-     *
-     * Todo: Encapsulate in transaction
      */
     public void consume() {
         try
@@ -40,7 +38,6 @@ public class EventConsumer {
             }
         } catch(Exception e) {
             LOGGER.error ("Exception when accepting event: {}".format(e.getMessage ()));
-            // ToDo: rollback
         }
     }
 
