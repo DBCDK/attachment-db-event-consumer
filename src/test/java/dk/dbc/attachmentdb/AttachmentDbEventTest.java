@@ -21,7 +21,7 @@ public class AttachmentDbEventTest {
         try {
             JSONBContext context = new JSONBContext ();
             String json = context.marshall (event);
-            assertEquals ("{\"consumerId\":\"test\",\"bibliographicRecordId\":\"123456\",\"agencyId\":999999,\"isActive\":true}", json);
+            assertEquals ("{\"consumerId\":\"test\",\"bibliographicRecordId\":\"123456\",\"agencyId\":999999,\"value\":true}", json);
         } catch (JSONBException e) {
             fail("JSONBException: {}".format(e.getMessage ()));
         }

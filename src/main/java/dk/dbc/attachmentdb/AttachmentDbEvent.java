@@ -6,6 +6,7 @@
 package dk.dbc.attachmentdb;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
@@ -62,7 +63,8 @@ public class AttachmentDbEvent {
 
     private boolean isActive;
 
-    public boolean getIsActive() {
+    @JsonProperty("value")
+    public boolean IsActive() {
         return isActive;
     }
 }
