@@ -68,7 +68,12 @@ public class AttachmentDbEvent {
 
     @Override
     public String toString () {
-        return "id:{}, consumerId:{}, bibliographicRecordId:{}, agency:{}, isActive:{}"
-                .format(String.valueOf(id), consumerId, bibliographicRecordId, agencyId, String.valueOf(isActive));
+        return "AttachmentDbEvent{" +
+                "id=" + id +
+                ", consumerId='" + consumerId + '\'' +
+                ", bibliographicRecordId='" + bibliographicRecordId + '\'' +
+                ", agencyId=" + agencyId +
+                ", isActive=" + isActive +
+                '}';
     }
 }
