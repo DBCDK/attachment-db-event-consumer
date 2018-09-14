@@ -49,7 +49,7 @@ public class EventConsumer {
                 accept (event);
             }
         } catch(Exception e) {
-            LOGGER.error ("Exception when accepting event: {}".format(e.getMessage ()));
+            LOGGER.error ("Exception when accepting event: {}", e.getMessage ());
         }
     }
 
