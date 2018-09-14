@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * Service home: Todo (add when known)
  * </p>
  */
-public class SolrDocstoreConnector {
+public class SolrDocstoreConnector implements AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SolrDocstoreConnector.class);
 
