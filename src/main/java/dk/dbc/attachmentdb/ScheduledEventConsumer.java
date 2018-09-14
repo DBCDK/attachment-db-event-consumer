@@ -23,15 +23,20 @@ import javax.ejb.Startup;
 public class ScheduledEventConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledEventConsumer.class);
 
+    // ToDo: Consider if we should make this a configurable property?
+    private final static int MAX_EVENTS_CONSUMED = 1000;
+
     @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
     public void run() {
+        EventConsumer consumer = new EventConsumer ();
         try {
+            LOGGER.info ("Consume new events from attachment-db");
 
-            // Todo:
-            // consume()
-            //   - poll()
-            //   - acceptEvent()
-
+            int consumed = 0;
+            while (consumed < MAX_EVENTS_CONSUMED && consumer.consume() > 0) {
+                consumed++;
+            }
+            LOGGER.info ("Consumed {} new events from attachment-db", consumed);
         } catch (Exception e) {
             LOGGER.error("Exception caught while processing events", e);
         }
