@@ -39,18 +39,21 @@ public class EventConsumer {
     /**
      * Consume next event from the attachment events queue.
      * On error, the event queue is rolled back.
+     * @return Number of events consumed
      */
-    public void consume() {
+    public int consume() {
         try
         {
             AttachmentDbEvent event = poll ();
             if (event != null) {
                 LOGGER.info ("Received one event from the queue: {}", event.toString ());
                 accept (event);
+                return 1;
             }
         } catch(Exception e) {
             LOGGER.error ("Exception when accepting event: {}", e.getMessage ());
         }
+        return 0;
     }
 
     /**
