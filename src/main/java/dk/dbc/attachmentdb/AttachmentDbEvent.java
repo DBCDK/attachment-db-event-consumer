@@ -6,8 +6,14 @@
 package dk.dbc.attachmentdb;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 
 @Entity
 @Table(name = "event")
@@ -62,7 +68,8 @@ public class AttachmentDbEvent {
 
     private boolean isActive;
 
-    public boolean getIsActive() {
+    @JsonProperty("value")
+    public boolean IsActive() {
         return isActive;
     }
 }
