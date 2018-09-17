@@ -5,6 +5,8 @@
 
 package dk.dbc.attachmentdb;
 
+import dk.dbc.util.Timed;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +15,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-
-import dk.dbc.util.Timed;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * This bean consumes events from the attachment queue and
@@ -70,8 +68,10 @@ public class EventConsumer {
     }
 
     /**
-     * Send event to SolrDocstore
-     * @throws AttachmentDbEventAcceptException if the event could not be delivered to SolrDocstore
+     * Publishes event to Solr doc-store
+     * @param event event to be published
+     * @throws AttachmentDbEventAcceptException if the event could not be
+     * delivered to the Solr doc-store
      */
     @Timed
     public void accept(AttachmentDbEvent event) throws AttachmentDbEventAcceptException {
