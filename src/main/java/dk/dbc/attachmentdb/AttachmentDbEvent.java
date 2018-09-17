@@ -72,4 +72,15 @@ public class AttachmentDbEvent {
     public boolean IsActive() {
         return isActive;
     }
+
+    @Override
+    public String toString () {
+        return "AttachmentDbEvent{" +
+                "id=" + id +
+                ", consumerId='" + consumerId + '\'' +
+                ", bibliographicRecordId='" + bibliographicRecordId + '\'' +
+                ", agencyId=" + agencyId +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
