@@ -8,6 +8,7 @@ package dk.dbc.attachmentdb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -26,14 +27,15 @@ public class ScheduledEventConsumer {
     // ToDo: Consider if we should make this a configurable property?
     private final static int MAX_EVENTS_CONSUMED = 1000;
 
+    @EJB EventConsumer eventConsumer;
+
     @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
     public void run() {
-        EventConsumer consumer = new EventConsumer ();
         try {
             LOGGER.info ("Consume new events from attachment-db");
 
             int consumed = 0;
-            while (consumed < MAX_EVENTS_CONSUMED && consumer.consume() > 0) {
+            while (consumed < MAX_EVENTS_CONSUMED && eventConsumer.consume() > 0) {
                 consumed++;
             }
             LOGGER.info ("Consumed {} new events from attachment-db", consumed);
