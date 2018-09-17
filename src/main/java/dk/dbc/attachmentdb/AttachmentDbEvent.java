@@ -69,7 +69,7 @@ public class AttachmentDbEvent {
     private boolean isActive;
 
     @JsonProperty("value")
-    public boolean IsActive() {
+    public boolean isActive() {
         return isActive;
     }
 
