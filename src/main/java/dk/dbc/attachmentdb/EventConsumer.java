@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,6 +42,7 @@ public class EventConsumer {
      * @return Number of events consumed
      * @throws AttachmentDbEventAcceptException on failure to publish event
      */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public int consume() throws AttachmentDbEventAcceptException {
         AttachmentDbEvent event = poll ();
         if (event != null) {
