@@ -14,10 +14,12 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 
+@ApplicationScoped
 public class SolrDocstoreConnectorFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolrDocstoreConnectorFactory.class);
 

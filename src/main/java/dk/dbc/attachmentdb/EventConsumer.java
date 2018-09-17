@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,18 +40,15 @@ public class EventConsumer {
      * Consume next event from the attachment events queue.
      * On error, the event queue is rolled back.
      * @return Number of events consumed
+     * @throws AttachmentDbEventAcceptException on failure to publish event
      */
-    public int consume() {
-        try
-        {
-            AttachmentDbEvent event = poll ();
-            if (event != null) {
-                LOGGER.info ("Received one event from the queue: {}", event.toString ());
-                accept (event);
-                return 1;
-            }
-        } catch(Exception e) {
-            LOGGER.error ("Exception when accepting event: {}", e.getMessage ());
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public int consume() throws AttachmentDbEventAcceptException {
+        AttachmentDbEvent event = poll ();
+        if (event != null) {
+            LOGGER.info ("Received one event from the queue: {}", event.toString ());
+            accept (event);
+            return 1;
         }
         return 0;
     }
