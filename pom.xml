@@ -40,7 +40,6 @@
       <groupId>dk.dbc</groupId>
       <artifactId>json-binding</artifactId>
       <version>0.1-SNAPSHOT</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>dk.dbc</groupId>
