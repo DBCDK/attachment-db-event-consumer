@@ -9,23 +9,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "event")
-@NamedQueries({
-        @NamedQuery(
-                name = AttachmentDbEvent.REMOVE_EVENT_QUERY_NAME,
-                query = AttachmentDbEvent.REMOVE_EVENT_QUERY)
+@NamedNativeQueries({
+    @NamedNativeQuery(name = AttachmentDbEvent.REMOVE_EVENT_QUERY_NAME,
+        query = "SELECT * FROM remove_event(?consumerId)",
+        resultClass = AttachmentDbEvent.class)
 })
 public class AttachmentDbEvent {
-    public static final String REMOVE_EVENT_QUERY =
-            "SELECT FUNCTION('remove_event', :consumerId)" +
-            " FROM AttachmentDbEvent event";
     public static final String REMOVE_EVENT_QUERY_NAME =
             "AttachmentDbEvent.removeEvent";
 
