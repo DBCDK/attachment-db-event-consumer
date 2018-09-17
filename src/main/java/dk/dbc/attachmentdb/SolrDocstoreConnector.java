@@ -79,8 +79,8 @@ public class SolrDocstoreConnector implements AutoCloseable {
     }
 
     /**
+     * Sends event to the Solr doc-store
      * @param event Event
-     * @return true if the event was accepted by the Solrdocstore service
      * @throws SolrDocstoreConnectorException on failure to communicate with the Solrdocstore service
      * @throws SolrDocstoreConnectoreUnexpectedStatusCodeException on unexpected response status code
      *
