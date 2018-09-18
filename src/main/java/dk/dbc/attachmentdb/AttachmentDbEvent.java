@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "event")
@@ -28,8 +28,10 @@ public class AttachmentDbEvent {
 
     public AttachmentDbEvent() { }
 
-    AttachmentDbEvent(String consumerId, String bibliographicRecordId, int agencyId, boolean isActive) {
-        this.id = -1;
+    // For testing purposes only
+    AttachmentDbEvent(long eventId, String consumerId,
+                      String bibliographicRecordId, int agencyId, boolean isActive) {
+        this.id = eventId;
         this.consumerId = consumerId;
         this.bibliographicRecordId = bibliographicRecordId;
         this.agencyId = agencyId;
@@ -37,7 +39,6 @@ public class AttachmentDbEvent {
     }
 
     @Id
-    @GeneratedValue
     private long id;
 
     @JsonIgnore
@@ -68,6 +69,27 @@ public class AttachmentDbEvent {
     @JsonProperty("value")
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AttachmentDbEvent that = (AttachmentDbEvent) o;
+        return id == that.id &&
+                agencyId == that.agencyId &&
+                isActive == that.isActive &&
+                Objects.equals(consumerId, that.consumerId) &&
+                Objects.equals(bibliographicRecordId, that.bibliographicRecordId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, consumerId, bibliographicRecordId, agencyId, isActive);
     }
 
     @Override

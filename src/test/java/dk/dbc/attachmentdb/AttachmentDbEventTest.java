@@ -16,14 +16,15 @@ public class AttachmentDbEventTest {
 
     @Test
     public void serialize_event() {
-        AttachmentDbEvent event = new AttachmentDbEvent ("test", "123456", 999999, true);
+        AttachmentDbEvent event = new AttachmentDbEvent(
+                1, "test", "123456", 999999, true);
 
         try {
-            JSONBContext context = new JSONBContext ();
-            String json = context.marshall (event);
-            assertEquals ("{\"consumerId\":\"test\",\"bibliographicRecordId\":\"123456\",\"agencyId\":999999,\"value\":true}", json);
-        } catch (JSONBException e) {
-            fail("JSONBException: {}".format(e.getMessage ()));
+            JSONBContext context = new JSONBContext();
+            String json = context.marshall(event);
+            assertEquals("{\"consumerId\":\"test\",\"bibliographicRecordId\":\"123456\",\"agencyId\":999999,\"value\":true}", json);
+        } catch(JSONBException e) {
+            fail(String.format(e.getMessage()));
         }
     }
 }

@@ -31,7 +31,7 @@ public class EventConsumer {
 
     @Inject
     @ConfigProperty(name = "CONSUMER_ID")
-    private String consumerId;
+    String consumerId;
 
     @Inject
     SolrDocstoreConnector solrDocstoreConnector;
