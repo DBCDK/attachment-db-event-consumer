@@ -5,6 +5,8 @@
 
 package dk.dbc.attachmentdb;
 
+import org.eclipse.microprofile.metrics.Counter;
+import org.eclipse.microprofile.metrics.annotation.Metric;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Inject;
 
 /**
  * This enterprise Java bean represents attempts at dispatching requests to SolrDocStore,
@@ -29,6 +32,10 @@ public class ScheduledEventConsumer {
 
     @EJB EventConsumer eventConsumer;
 
+    @Inject
+    @Metric
+    Counter eventCounter;
+
     @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
     public void run() {
         try {
@@ -37,6 +44,7 @@ public class ScheduledEventConsumer {
             int consumed = 0;
             while (consumed < MAX_EVENTS_CONSUMED && eventConsumer.consume() > 0) {
                 consumed++;
+                eventCounter.inc();
             }
             LOGGER.info ("Consumed {} new events from attachment-db", consumed);
         } catch (Exception e) {

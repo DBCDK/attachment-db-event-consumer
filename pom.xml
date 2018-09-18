@@ -32,7 +32,7 @@
     <httpclient.version>0.1.0</httpclient.version>
     <stopwatch.version>1.0-SNAPSHOT</stopwatch.version>
     <jersey.version>2.22.2</jersey.version>
-    <microprofile.version>1.2</microprofile.version>
+    <microprofile.version>1.2</microprofile.version>  <!-- version 1.2 available since Payara v4.1.2.181 -->
   </properties>
 
   <dependencies>
@@ -101,9 +101,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.microprofile.config</groupId>
-      <artifactId>microprofile-config-api</artifactId>
-      <version>${microprofile.version}</version> <!-- version 1.2 available since Payara v4.1.2.181 -->
+      <groupId>org.eclipse.microprofile</groupId>
+      <artifactId>microprofile</artifactId>
+      <type>pom</type>
+      <version>${microprofile.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
