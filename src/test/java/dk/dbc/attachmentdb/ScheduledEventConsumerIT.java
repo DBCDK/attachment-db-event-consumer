@@ -7,6 +7,8 @@ package dk.dbc.attachmentdb;
 
 import org.eclipse.microprofile.metrics.Counter;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class ScheduledEventConsumerIT extends JpaIntegrationTest {
     private final SolrDocstoreConnector solrDocstoreConnector = mock(SolrDocstoreConnector.class);
 
     @Test
-    public void consumeEvents() {
+    public void consumeEvents() throws SolrDocstoreConnectorException {
         final AttachmentDbEvent aRec1Insert = new AttachmentDbEvent(
                 1, "consumer_a", "Rec1", 870970, true);
         final AttachmentDbEvent bRec1Insert = new AttachmentDbEvent(
@@ -45,9 +47,9 @@ public class ScheduledEventConsumerIT extends JpaIntegrationTest {
         assertThat("number of remaining events", remainingEvents.size(), is(1));
         assertThat("remaining event", remainingEvents.get(0), is(bRec1Insert));
 
-        //final InOrder solrDocstoreConnectorVerifier = Mockito.inOrder(solrDocstoreConnector);
-        //solrDocstoreConnectorVerifier.verify(solrDocstoreConnector).dispatchEvent(aRec1Insert);
-        //solrDocstoreConnectorVerifier.verify(solrDocstoreConnector).dispatchEvent(aRec1Delete);
+        final InOrder solrDocstoreConnectorVerifier = Mockito.inOrder(solrDocstoreConnector);
+        solrDocstoreConnectorVerifier.verify(solrDocstoreConnector).addEvent(aRec1Insert);
+        solrDocstoreConnectorVerifier.verify(solrDocstoreConnector).addEvent(aRec1Delete);
     }
 
     private ScheduledEventConsumer createScheduledEventConsumer(String consumerId) {
