@@ -40,7 +40,7 @@ public class SolrDocstoreConnector implements AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SolrDocstoreConnector.class);
 
-    private static final String PATH_DISPATCH_EVENT = "/api/v1/events"; // ToDo: rename/redefine when endpoint name is known
+    private static final String PATH_DISPATCH_EVENT = "/api/resource/add";
 
     private static final RetryPolicy RETRY_POLICY = new RetryPolicy()
             .retryOn(Collections.singletonList(ProcessingException.class))
@@ -83,10 +83,8 @@ public class SolrDocstoreConnector implements AutoCloseable {
      * @param event Event
      * @throws SolrDocstoreConnectorException on failure to communicate with the Solrdocstore service
      * @throws SolrDocstoreConnectoreUnexpectedStatusCodeException on unexpected response status code
-     *
-     * TODO: Rename and adjust implementation when we receive specs from Search
      */
-    public void dispatchEvent(AttachmentDbEvent event)
+    public void addEvent(AttachmentDbEvent event)
             throws SolrDocstoreConnectorException {
 
         final Stopwatch stopwatch = new Stopwatch();

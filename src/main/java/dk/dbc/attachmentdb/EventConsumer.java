@@ -75,12 +75,10 @@ public class EventConsumer {
     @Timed
     public void accept(AttachmentDbEvent event) throws AttachmentDbEventAcceptException {
         try {
-            // disabled until solr doc-store endpoint exists
-            //solrDocstoreConnector.dispatchEvent (event);
+            solrDocstoreConnector.addEvent(event);
             LOGGER.info ("Accepted one event from the queue: {}", event.toString ());
         }
-        //catch(SolrDocstoreConnectorException e) {
-        catch (RuntimeException e) {
+        catch(SolrDocstoreConnectorException e) {
             throw new AttachmentDbEventAcceptException ("Unable to accept event", e);
         }
     }

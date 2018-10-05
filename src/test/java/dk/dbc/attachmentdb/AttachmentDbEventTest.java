@@ -7,9 +7,11 @@ package dk.dbc.attachmentdb;
 
 import dk.dbc.jsonb.JSONBContext;
 import dk.dbc.jsonb.JSONBException;
+import org.json.JSONException;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 
 public class AttachmentDbEventTest {
@@ -22,8 +24,9 @@ public class AttachmentDbEventTest {
         try {
             JSONBContext context = new JSONBContext();
             String json = context.marshall(event);
-            assertEquals("{\"consumerId\":\"test\",\"bibliographicRecordId\":\"123456\",\"agencyId\":999999,\"value\":true}", json);
-        } catch(JSONBException e) {
+            JSONAssert.assertEquals("{\"bibliographicRecordId\":\"123456\",\"agencyId\":999999,\"value\":true,\"field\":\"hasCoverUrl\"}",
+                    json, JSONCompareMode.STRICT);
+        } catch(JSONBException | JSONException e) {
             fail(String.format(e.getMessage()));
         }
     }

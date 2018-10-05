@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Objects;
 
 @Entity
@@ -48,6 +49,7 @@ public class AttachmentDbEvent {
 
     private String consumerId;
 
+    @JsonIgnore
     public String getConsumerId() {
         return consumerId;
     }
@@ -71,7 +73,12 @@ public class AttachmentDbEvent {
         return isActive;
     }
 
-    @Override
+    @Transient
+    @JsonProperty("field")
+    public String getType() {
+        return "hasCoverUrl";
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
