@@ -35,6 +35,7 @@ public class DatabaseMigrator {
         final Flyway flyway = new Flyway();
         flyway.setTable("schema_version");
         flyway.setBaselineOnMigrate(true);
+        flyway.setBaselineVersionAsString("0");
         flyway.setDataSource(dataSource);
         for (MigrationInfo info : flyway.info().all()) {
             LOGGER.info("database migration {} : {} from file '{}'",
