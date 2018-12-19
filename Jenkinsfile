@@ -53,10 +53,13 @@ pipeline {
 		stage("docker build") {
 			steps {
 				script {
-					def image = docker.build("docker-io.dbc.dk/attachment-db-event-consumer:${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
 					if (env.BRANCH_NAME == 'master') {
-						image.push()
+						imageTag = "DIT-${env.BUILD_NUMBER}"
+					} else {
+						imageTag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
 					}
+					def image = docker.build("docker-io.dbc.dk/attachment-db-event-consumer:${imageTag}")
+					image.push()
 				}
 			}
 		}
