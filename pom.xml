@@ -10,30 +10,14 @@
 
   <parent>
     <groupId>dk.dbc</groupId>
-    <artifactId>dbc-pom</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>microservice-pom</artifactId>
+    <version>latest-SNAPSHOT</version>
     <relativePath></relativePath>
   </parent>
 
   <artifactId>attachment-db-event-consumer</artifactId>
   <version>1.0</version>
   <packaging>war</packaging>
-
-  <repositories>
-    <repository>
-      <id>mavenrepo.dbc.dk</id>
-      <url>http://mavenrepo.dbc.dk/content/groups/public/</url>
-    </repository>
-  </repositories>
-
-  <properties>
-    <jdk.target.version>1.8</jdk.target.version>
-    <slf4j.version>1.7.25</slf4j.version>
-    <httpclient.version>0.1.0</httpclient.version>
-    <stopwatch.version>1.0-SNAPSHOT</stopwatch.version>
-    <jersey.version>2.22.2</jersey.version>
-    <microprofile.version>1.2</microprofile.version>  <!-- version 1.2 available since Payara v4.1.2.181 -->
-  </properties>
 
   <dependencies>
     <dependency>
@@ -54,8 +38,6 @@
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
-      <version>7.0</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -65,28 +47,25 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
-      <version>5.1.4</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.2.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>dk.dbc</groupId>
       <artifactId>httpclient</artifactId>
-      <version>${httpclient.version}</version>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
       <groupId>dk.dbc</groupId>
       <artifactId>stopwatch</artifactId>
-      <version>${stopwatch.version}</version>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
@@ -97,26 +76,16 @@
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-json-jackson</artifactId>
-      <version>${jersey.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.microprofile</groupId>
       <artifactId>microprofile</artifactId>
       <type>pom</type>
-      <version>${microprofile.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.hamcrest</groupId>
-          <artifactId>hamcrest-core</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.skyscreamer</groupId>
@@ -132,29 +101,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
-        <configuration>
-          <source>${jdk.target.version}</source>
-          <target>${jdk.target.version}</target>
-          <testSource>${jdk.target.version}</testSource>
-          <testTarget>${jdk.target.version}</testTarget>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <webResources>
-            <resource>
-              <directory>${basedir}/src/main/webapp/WEB-INF</directory>
-              <filtering>true</filtering>
-              <targetPath>WEB-INF</targetPath>
-            </resource>
-          </webResources>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
