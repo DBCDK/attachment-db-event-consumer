@@ -1,0 +1,7 @@
+{
+    "jdbc": {
+        "jdbc/attachment-db": {
+            "url": "${ATTACHMENT_DB_URL}"
+        }
+    }
+}

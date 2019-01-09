@@ -58,7 +58,8 @@ pipeline {
 					} else {
 						imageTag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
 					}
-					def image = docker.build("docker-io.dbc.dk/attachment-db-event-consumer:${imageTag}")
+					def image = docker.build("docker-io.dbc.dk/attachment-db-event-consumer:${imageTag}",
+						"--pull --no-cache .")
 					image.push()
 				}
 			}
