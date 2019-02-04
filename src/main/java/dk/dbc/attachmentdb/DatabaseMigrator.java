@@ -32,11 +32,12 @@ public class DatabaseMigrator {
 
     @PostConstruct
     public void migrate() {
-        final Flyway flyway = new Flyway();
-        flyway.setTable("schema_version");
-        flyway.setBaselineOnMigrate(true);
-        flyway.setBaselineVersionAsString("0");
-        flyway.setDataSource(dataSource);
+        final Flyway flyway = Flyway.configure()
+                .table("schema_version")
+                .dataSource(dataSource)
+                .baselineOnMigrate(true)
+                .baselineVersion("0")
+                .load();
         for (MigrationInfo info : flyway.info().all()) {
             LOGGER.info("database migration {} : {} from file '{}'",
                     info.getVersion(), info.getDescription(), info.getScript());
