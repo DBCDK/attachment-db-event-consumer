@@ -1,4 +1,5 @@
 {
+    "appName": "attachment-db-event-consumer",
     "jdbc": {
         "jdbc/attachment-db": {
             "url": "${ATTACHMENT_DB_URL}"
