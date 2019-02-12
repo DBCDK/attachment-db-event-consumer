@@ -4,5 +4,8 @@
         "jdbc/attachment-db": {
             "url": "${ATTACHMENT_DB_URL}"
         }
+    },
+    "hazelcast": {
+        "groupName": "attachment-db-event-consumer"
     }
 }
