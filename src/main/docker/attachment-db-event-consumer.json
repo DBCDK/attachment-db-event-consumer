@@ -6,6 +6,6 @@
         }
     },
     "hazelcast": {
-        "groupName": "attachment-db-event-consumer"
+        "clusterName": "attachment-db-event-consumer"
     }
 }
