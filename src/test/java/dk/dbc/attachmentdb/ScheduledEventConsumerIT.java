@@ -72,16 +72,6 @@ public class ScheduledEventConsumerIT extends JpaIntegrationTest {
             }
 
             @Override
-            public void dec() {
-                count--;
-            }
-
-            @Override
-            public void dec(long l) {
-                count = count - l;
-            }
-
-            @Override
             public long getCount() {
                 return count;
             }
