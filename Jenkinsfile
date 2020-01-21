@@ -9,7 +9,7 @@ pipeline {
 		maven "Maven 3"
 	}
 	environment {
-		MARATHON_TOKEN = credentials("METASCRUM_MARATHON_TOKEN")
+		GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
 	}
 	triggers {
 		pollSCM("H/03 * * * *")
@@ -63,6 +63,31 @@ pipeline {
 					def image = docker.build("docker-io.dbc.dk/attachment-db-event-consumer:${imageTag}",
 						"--pull --no-cache .")
 					image.push()
+				}
+			}
+		}
+		stage("docker deploy") {
+			agent {
+				docker {
+					label workerNode
+					image "docker.dbc.dk/build-env:latest"
+					alwaysPull true
+				}
+			}
+			when {
+				expression {
+					(currentBuild.result == null || currentBuild.result == 'SUCCESS') && env.BRANCH_NAME == 'master'
+				}
+			}
+			steps {
+				script {
+					dir("deploy") {
+						sh """
+                            set-new-version attachment-db-event-consumer.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/attachment-db-event-consumer-deploy DIT-${env.BUILD_NUMBER} -b fbstest
+                            
+                            set-new-version services/attachment-db-event-consumer-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/dit-gitops-secrets DIT-${env.BUILD_NUMBER} -b master
+						"""
+					}
 				}
 			}
 		}
