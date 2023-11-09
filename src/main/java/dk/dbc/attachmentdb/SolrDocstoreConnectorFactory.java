@@ -12,20 +12,19 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.ws.rs.client.Client;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.Client;
 
 @ApplicationScoped
 public class SolrDocstoreConnectorFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolrDocstoreConnectorFactory.class);
 
     public static SolrDocstoreConnector create(String solrDocstoreServiceBaseUrl) {
-        final Client client = HttpClient.newClient(new ClientConfig()
-                .register(new JacksonFeature()));
+        Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
         LOGGER.info("Creating SolrDocstoreServiceConnector for: {}", solrDocstoreServiceBaseUrl);
         return new SolrDocstoreConnector(client, solrDocstoreServiceBaseUrl);
     }

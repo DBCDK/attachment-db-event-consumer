@@ -1,8 +1,3 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU GPLv3
- * See license text in LICENSE.txt
- */
-
 package dk.dbc.attachmentdb;
 
 import org.flywaydb.core.Flyway;
@@ -10,10 +5,10 @@ import org.flywaydb.core.api.MigrationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
 import javax.sql.DataSource;
 
 @Startup
@@ -32,15 +27,14 @@ public class DatabaseMigrator {
 
     @PostConstruct
     public void migrate() {
-        final Flyway flyway = Flyway.configure()
+        Flyway flyway = Flyway.configure()
                 .table("schema_version")
                 .dataSource(dataSource)
                 .baselineOnMigrate(true)
                 .baselineVersion("0")
                 .load();
         for (MigrationInfo info : flyway.info().all()) {
-            LOGGER.info("database migration {} : {} from file '{}'",
-                    info.getVersion(), info.getDescription(), info.getScript());
+            LOGGER.info("database migration {} : {} from file '{}'", info.getVersion(), info.getDescription(), info.getScript());
         }
         flyway.migrate();
     }

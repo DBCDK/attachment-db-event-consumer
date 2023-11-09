@@ -9,10 +9,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +49,7 @@ public class JpaIntegrationTest extends IntegrationTest {
     }
 
     public void inTransaction(CodeBlockVoidExecution codeBlock) {
-        final EntityTransaction transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         try {
             codeBlock.execute();

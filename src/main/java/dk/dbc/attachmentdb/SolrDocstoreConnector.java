@@ -9,15 +9,16 @@ import dk.dbc.httpclient.FailSafeHttpClient;
 import dk.dbc.httpclient.HttpPost;
 import dk.dbc.invariant.InvariantUtil;
 import dk.dbc.util.Stopwatch;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import net.jodah.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Collections;
+import java.time.Duration;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,13 +42,12 @@ public class SolrDocstoreConnector implements AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolrDocstoreConnector.class);
 
     private static final String PATH_DISPATCH_EVENT = "/api/resource/add";
+    private static final Set<Integer> RETRY_CODES = Set.of(404, 500, 502);
 
-    private static final RetryPolicy RETRY_POLICY = new RetryPolicy()
-            .retryOn(Collections.singletonList(ProcessingException.class))
-            .retryIf((Response response) -> response.getStatus() == 404
-                    || response.getStatus() == 500
-                    || response.getStatus() == 502)
-            .withDelay(10, TimeUnit.SECONDS)
+    private static final RetryPolicy<Response> RETRY_POLICY = new RetryPolicy<Response>()
+            .handle(ProcessingException.class)
+            .handleResultIf(response -> RETRY_CODES.contains(response.getStatus()))
+            .withDelay(Duration.ofSeconds(10))
             .withMaxRetries(6);
 
     private final FailSafeHttpClient failSafeHttpClient;
@@ -68,10 +68,8 @@ public class SolrDocstoreConnector implements AutoCloseable {
      * @param baseUrl base URL for solrdocstore service endpoint
      */
     public SolrDocstoreConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl) {
-        this.failSafeHttpClient = InvariantUtil.checkNotNullOrThrow(
-                failSafeHttpClient, "failSafeHttpClient");
-        this.baseUrl = InvariantUtil.checkNotNullNotEmptyOrThrow(
-                baseUrl, "baseUrl");
+        this.failSafeHttpClient = InvariantUtil.checkNotNullOrThrow(failSafeHttpClient, "failSafeHttpClient");
+        this.baseUrl = InvariantUtil.checkNotNullNotEmptyOrThrow(baseUrl, "baseUrl");
     }
 
     public void close() {
@@ -84,21 +82,18 @@ public class SolrDocstoreConnector implements AutoCloseable {
      * @throws SolrDocstoreConnectorException on failure to communicate with the Solrdocstore service
      * @throws SolrDocstoreConnectoreUnexpectedStatusCodeException on unexpected response status code
      */
-    public void addEvent(AttachmentDbEvent event)
-            throws SolrDocstoreConnectorException {
-
-        final Stopwatch stopwatch = new Stopwatch();
+    public void addEvent(AttachmentDbEvent event) throws SolrDocstoreConnectorException {
+        Stopwatch stopwatch = new Stopwatch();
+        if( event == null ) {
+            throw new SolrDocstoreConnectorException ("event is null");
+        }
         try {
-            if( event == null ) {
-                throw new SolrDocstoreConnectorException ("event is null");
-            }
-
-            final HttpPost solrDocstorePostRequest = new HttpPost(failSafeHttpClient)
+            HttpPost solrDocstorePostRequest = new HttpPost(failSafeHttpClient)
                     .withBaseUrl(baseUrl)
                     .withPathElements(PATH_DISPATCH_EVENT)
                     .withData (event, MediaType.APPLICATION_JSON);
 
-            final Response response = solrDocstorePostRequest.execute();
+            Response response = solrDocstorePostRequest.execute();
             assertResponseStatus(response, Response.Status.OK); // ToDo: May return CREATED instead ?, check with spec.
         } finally {
             LOGGER.info("dispatchEvent(agency:{}, record-id:{}) took {} milliseconds",
@@ -112,16 +107,11 @@ public class SolrDocstoreConnector implements AutoCloseable {
      * @param response Service response
      * @param expectedStatus The expected status
      */
-    private void assertResponseStatus(Response response, Response.Status expectedStatus)
-            throws SolrDocstoreConnectoreUnexpectedStatusCodeException {
-
-        final Response.Status actualStatus =
-                Response.Status.fromStatusCode(response.getStatus());
-
+    private void assertResponseStatus(Response response, Response.Status expectedStatus) throws SolrDocstoreConnectoreUnexpectedStatusCodeException {
+        Response.Status actualStatus = Response.Status.fromStatusCode(response.getStatus());
         if (actualStatus != expectedStatus) {
             throw new SolrDocstoreConnectoreUnexpectedStatusCodeException(
-                    String.format("Solrdocstore service returned with unexpected status code: %s",
-                            actualStatus),
+                    String.format("Solrdocstore service returned with unexpected status code: %s", actualStatus),
                     actualStatus.getStatusCode());
         }
     }
