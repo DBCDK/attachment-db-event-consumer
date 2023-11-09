@@ -5,21 +5,16 @@
 
 package dk.dbc.attachmentdb;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_DRIVER;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_PASSWORD;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_USER;
 
 public class JpaIntegrationTest extends IntegrationTest {
     private static Map<String, String> entityManagerProperties = new HashMap<>();
@@ -28,13 +23,7 @@ public class JpaIntegrationTest extends IntegrationTest {
 
     @BeforeClass
     public static void createEntityManagerFactory() {
-        entityManagerProperties.put(JDBC_USER, datasource.getUser());
-        entityManagerProperties.put(JDBC_PASSWORD, datasource.getPassword());
-        entityManagerProperties.put(JDBC_URL, datasource.getUrl());
-        entityManagerProperties.put(JDBC_DRIVER, "org.postgresql.Driver");
-        entityManagerProperties.put("eclipselink.logging.level", "FINE");
-        entityManagerFactory = Persistence.createEntityManagerFactory(
-                "attachmentdbIT_PU", entityManagerProperties);
+        entityManagerFactory = Persistence.createEntityManagerFactory("attachmentdbIT_PU", DB_CONTAINER.entityManagerProperties());
     }
 
     @Before

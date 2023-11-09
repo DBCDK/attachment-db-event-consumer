@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 public class PlpgsqlIT extends IntegrationTest {
     @Test
     public void add_event() throws SQLException {
-        try (Connection conn = datasource.getConnection();
+        try (Connection conn = DB_CONTAINER.createConnection();
              Statement statement = conn.createStatement()) {
             statement.execute("SELECT * FROM add_event('rec1', 870970, true, 'consumer_a')");   // add
             statement.execute("SELECT * FROM add_event('rec1', 870970, true, 'consumer_b')");   // add
@@ -39,7 +39,7 @@ public class PlpgsqlIT extends IntegrationTest {
 
     @Test
     public void remove_event() throws SQLException {
-        try (Connection conn = datasource.getConnection();
+        try (Connection conn = DB_CONTAINER.createConnection();
              Statement statement = conn.createStatement()) {
             statement.execute("SELECT * FROM add_event('rec1', 870970, true, 'consumer_a')");
             statement.execute("SELECT * FROM add_event('rec1', 870970, true, 'consumer_b')");
@@ -55,7 +55,7 @@ public class PlpgsqlIT extends IntegrationTest {
 
     @Test
     public void attachment_insert_trigger() throws SQLException {
-        try (Connection conn = datasource.getConnection();
+        try (Connection conn = DB_CONTAINER.createConnection();
              Statement statement = conn.createStatement()) {
             statement.executeUpdate("INSERT INTO attachment(lokalid,bibliotek,attachment_type) " +
                     "VALUES ('rec1', '870970', 'bagside_500')");    // ignore (not forside_*)
@@ -78,7 +78,7 @@ public class PlpgsqlIT extends IntegrationTest {
 
     @Test
     public void attachment_delete_trigger() throws SQLException {
-        try (Connection conn = datasource.getConnection();
+        try (Connection conn = DB_CONTAINER.createConnection();
              Statement statement = conn.createStatement()) {
             statement.executeUpdate("INSERT INTO attachment(lokalid,bibliotek,attachment_type) " +
                     "VALUES ('rec1', '870970', 'forside_500')");
