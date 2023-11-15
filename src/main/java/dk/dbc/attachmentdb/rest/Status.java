@@ -7,11 +7,11 @@ package dk.dbc.attachmentdb.rest;
 
 import dk.dbc.serviceutils.ServiceStatus;
 
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Stateless;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import javax.sql.DataSource;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;

@@ -10,12 +10,12 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -59,7 +59,7 @@ public class EventConsumer {
      */
     @Timed
     public AttachmentDbEvent poll() {
-        final List<AttachmentDbEvent> events = entityManager
+        List<AttachmentDbEvent> events = entityManager
                 .createNamedQuery(AttachmentDbEvent.REMOVE_EVENT_QUERY_NAME, AttachmentDbEvent.class)
                 .setParameter("consumerId", consumerId)
                 .getResultList();

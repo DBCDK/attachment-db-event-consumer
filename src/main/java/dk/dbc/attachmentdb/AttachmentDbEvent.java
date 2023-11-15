@@ -8,14 +8,15 @@ package dk.dbc.attachmentdb;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedNativeQueries;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "event")
 @NamedNativeQueries({
@@ -30,9 +31,8 @@ public class AttachmentDbEvent {
     public AttachmentDbEvent() { }
 
     // For testing purposes only
-    AttachmentDbEvent(long eventId, String consumerId,
-                      String bibliographicRecordId, int agencyId, boolean isActive) {
-        this.id = eventId;
+    AttachmentDbEvent(long eventId, String consumerId, String bibliographicRecordId, int agencyId, boolean isActive) {
+        id = eventId;
         this.consumerId = consumerId;
         this.bibliographicRecordId = bibliographicRecordId;
         this.agencyId = agencyId;

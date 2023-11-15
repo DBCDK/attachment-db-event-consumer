@@ -21,11 +21,11 @@ public class ScheduledEventConsumerIT extends JpaIntegrationTest {
 
     @Test
     public void consumeEvents() throws SolrDocstoreConnectorException {
-        final AttachmentDbEvent aRec1Insert = new AttachmentDbEvent(
+        AttachmentDbEvent aRec1Insert = new AttachmentDbEvent(
                 1, "consumer_a", "Rec1", 870970, true);
-        final AttachmentDbEvent bRec1Insert = new AttachmentDbEvent(
+        AttachmentDbEvent bRec1Insert = new AttachmentDbEvent(
                 2, "consumer_b", "Rec1", 870970, true);
-        final AttachmentDbEvent aRec1Delete = new AttachmentDbEvent(
+        AttachmentDbEvent aRec1Delete = new AttachmentDbEvent(
                 3, "consumer_a", "Rec1", 870970, false);
         inTransaction(() -> {
             entityManager.persist(aRec1Insert);
@@ -33,7 +33,7 @@ public class ScheduledEventConsumerIT extends JpaIntegrationTest {
             entityManager.persist(aRec1Delete);
         });
 
-        final ScheduledEventConsumer scheduledEventConsumer =
+        ScheduledEventConsumer scheduledEventConsumer =
                 createScheduledEventConsumer("consumer_a");
 
         inTransaction(scheduledEventConsumer::run);
@@ -41,26 +41,27 @@ public class ScheduledEventConsumerIT extends JpaIntegrationTest {
         assertThat("number of events consumed",
                 scheduledEventConsumer.eventCounter.getCount(), is(2L));
 
-        final List<AttachmentDbEvent> remainingEvents = entityManager.createQuery(
-                "SELECT event FROM AttachmentDbEvent event", AttachmentDbEvent.class)
+        List<AttachmentDbEvent> remainingEvents = entityManager.createQuery(
+                        "SELECT event FROM AttachmentDbEvent event", AttachmentDbEvent.class)
                 .getResultList();
         assertThat("number of remaining events", remainingEvents.size(), is(1));
         assertThat("remaining event", remainingEvents.get(0), is(bRec1Insert));
 
-        final InOrder solrDocstoreConnectorVerifier = Mockito.inOrder(solrDocstoreConnector);
+        InOrder solrDocstoreConnectorVerifier = Mockito.inOrder(solrDocstoreConnector);
         solrDocstoreConnectorVerifier.verify(solrDocstoreConnector).addEvent(aRec1Insert);
         solrDocstoreConnectorVerifier.verify(solrDocstoreConnector).addEvent(aRec1Delete);
     }
 
     private ScheduledEventConsumer createScheduledEventConsumer(String consumerId) {
-        final EventConsumer eventConsumer = new EventConsumer();
+        EventConsumer eventConsumer = new EventConsumer();
         eventConsumer.consumerId = consumerId;
         eventConsumer.entityManager = entityManager;
         eventConsumer.solrDocstoreConnector = solrDocstoreConnector;
-        final ScheduledEventConsumer scheduledEventConsumer = new ScheduledEventConsumer();
+        ScheduledEventConsumer scheduledEventConsumer = new ScheduledEventConsumer();
         scheduledEventConsumer.eventConsumer = eventConsumer;
         scheduledEventConsumer.eventCounter = new Counter() {
             long count = 0;
+
             @Override
             public void inc() {
                 count++;
